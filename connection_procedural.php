@@ -1,9 +1,10 @@
 <?php
-    require_once 'config.php';
-    $conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    mysqli_set_charset($conn, 'utf8mb4');
+require_once 'config.php';
+$conn = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 
-    if(mysqli_connect_errno()){
-        die("Conexiunea a esuat: " . mysqli_connect_errno());
-    }
+if (!$conn) {
+    die('Conexiunea a eșuat: ' . mysqli_connect_error());
+}
+
+mysqli_set_charset($conn, 'utf8mb4');
 ?>

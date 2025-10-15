@@ -1,33 +1,45 @@
 <?php
-    require_once 'connection_procedural.php';
+require_once 'connection_procedural.php';
 
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
 
-    if(empty($name) || empty($email)){
-        die("Numele si email-ul este obligatorii");
-    }
+if ($name === '' || $email === '') {
+    echo "<p style='color:#a00'>Numele și email-ul sunt obligatorii. <a href='form_insert_user.html'>Înapoi</a></p>";
+    mysqli_close($conn);
+    exit;
+}
 
-    $sql = "INSERT INTO users (name, email) VALUES (?, ?)";
-    $stmt = mysqli_prepare($conn, $sql);
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo "<p style='color:#a00'>Email invalid. <a href='form_insert_user.html'>Înapoi</a></p>";
+    mysqli_close($conn);
+    exit;
+}
 
-    if($stmt){
-        mysqli_stmt_bind_param($stmt, "ss", $name, $email);
+$sql = "INSERT INTO users (name, email) VALUES (?, ?)";
+$stmt = mysqli_prepare($conn, $sql);
 
-        if(mysqli_stmt_execute($stmt)){
-            echo "Utilizator adaugat cu secces!";
-        }else{
-            if(mysqli_errno($conn) == 1062){// codul 1062 verifica duplicatul
-                echo "Email-ul exista deja in baza de date";
-            } else {
-                echo "Erorare:  " . mysqli_error($conn);
-            }
-        }
+if (!$stmt) {
+    echo "<p style='color:#a00'>Eroare pregătire interogare: " . htmlspecialchars(mysqli_error($conn)) . "</p>";
+    mysqli_close($conn);
+    exit;
+}
 
-        mysqli_stmt_close($stmt);
+mysqli_stmt_bind_param($stmt, "ss", $name, $email);
+
+if (mysqli_stmt_execute($stmt)) {
+    echo "<p style='color:green'>Utilizator adăugat cu succes.</p>";
+    $insertOk = true;
+} else {
+    if (mysqli_errno($conn) == 1062) {
+        echo "<p style='color:#a00'>Email-ul există deja în baza de date.</p>";
     } else {
-        echo "Nu s-a putut pregati interogare.";
+        echo "<p style='color:#a00'>Eroare la inserare: " . htmlspecialchars(mysqli_error($conn)) . "</p>";
     }
+}
 
-    mysqli_clone($conn);
+mysqli_stmt_close($stmt);
+mysqli_close($conn);
+$delay = (!empty($insertOk) && $insertOk) ? 2000 : 4500; // ms
+echo "<script>setTimeout(function(){ window.location.href = 'form_insert_user.html'; }, $delay);</script>";
 ?>
