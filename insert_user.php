@@ -1,8 +1,12 @@
 <?php
     require_once 'connection_procedural.php';
 
-    $name = "Iacob Andrei";
-    $email = "iacob.andrei@elev.cihcahul.md";
+    $name = $_POST['name'] ?? '';
+    $email = $_POST['email'] ?? '';
+
+    if(empty($name) || empty($email)){
+        die("Numele si email-ul este obligatorii");
+    }
 
     $sql = "INSERT INTO users (name, email) VALUE (?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
@@ -16,7 +20,7 @@
             if(mysqli_errno($conn) == 1062){// codul 1062 verifica duplicatul
                 echo "Email-ul exista deja in baza de date";
             } else {
-                echo "Erorare la inserarae:  " . mysqli_error($conn);
+                echo "Erorare:  " . mysqli_error($conn);
             }
         }
 
