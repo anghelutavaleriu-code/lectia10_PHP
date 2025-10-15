@@ -3,18 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adauga Utilizatori</title>
+    <title>Adaugă utilizator</title>
+    <style>
+        :root{
+            --bg:#f7fafc;
+            --card:#ffffff;
+            --accent:#2563eb;
+            --muted:#6b7280;
+            --radius:10px;
+            --maxw:520px;
+            font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+        html,body{height:100%;}
+        body{
+            margin:0; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:24px;
+            color:#111827;
+        }
+        .card{
+            background:var(--card); padding:22px; border-radius:var(--radius); box-shadow:0 6px 18px rgba(15,23,42,0.06);
+            width:100%; max-width:var(--maxw);
+        }
+        h2{margin:0 0 10px 0; font-size:20px}
+        p.hint{margin:0 0 18px 0; color:var(--muted); font-size:14px}
+        form{display:grid; gap:12px}
+        label{display:block; font-size:13px; margin-bottom:6px}
+        input[type="text"], input[type="email"]{
+            width:100%; padding:10px 12px; border:1px solid #e5e7eb; border-radius:8px; font-size:15px;
+            box-sizing:border-box;
+        }
+        input[type="submit"]{
+            background:var(--accent); color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600;
+        }
+        input[type="submit"]:hover{filter:brightness(0.95)}
+        .row{display:flex; gap:10px; align-items:center}
+        .muted{color:var(--muted); font-size:13px}
+        .footer{display:flex; justify-content:space-between; align-items:center; margin-top:6px}
+        a.view{color:var(--accent); text-decoration:none; font-size:14px}
+        a.view:hover{text-decoration:underline}
+        @media (max-width:480px){ .card{padding:16px} }
+    </style>
 </head>
 <body>
-    <h2>Formular pentru adaugarea utilizator</h2>
-    <form action="insert_user.php" method="post">
-        <label for="name">Nume</label>
-        <input type="text" id="name" name="name" required><br>
+    <main class="card" role="main">
+        <h2>Adaugă utilizator</h2>
+        <p class="hint">Completează numele și adresa de email. Email-ul va fi unic în baza de date.</p>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" required><br>
+        <form action="insert_user.php" method="post" novalidate>
+            <div>
+                <label for="name">Nume</label>
+                <input type="text" id="name" name="name" autocomplete="name" required aria-required="true" placeholder="Ex: Maria Popescu">
+            </div>
 
-        <input type="submit" value="Adauga">
-    </form>
+            <div>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" required aria-required="true" placeholder="nume@exemplu.com">
+            </div>
+
+            <div class="row">
+                <input type="submit" value="Adaugă">
+                <div class="muted">&nbsp;</div>
+            </div>
+            <div class="footer">
+                <span class="muted">Protejat cu prepared statements (mysqli)</span>
+                <a class="view" href="select_users.php">Vezi utilizatorii</a>
+            </div>
+        </form>
+    </main>
 </body>
 </html>

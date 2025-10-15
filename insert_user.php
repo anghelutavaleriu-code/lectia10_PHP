@@ -8,7 +8,7 @@
         die("Numele si email-ul este obligatorii");
     }
 
-    $sql = "INSERT INTO users (name, email) VALUE (?, ?)";
+    $sql = "INSERT INTO users (name, email) VALUES (?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
 
     if($stmt){
